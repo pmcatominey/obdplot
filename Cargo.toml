@@ -1,0 +1,21 @@
+[package]
+name = "obdplot"
+default-run = "obdplot"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.56"
+
+[[bin]]
+name = "obdplot"
+path = "src/main.rs"
+
+[dependencies]
+eframe = "0.17.0"
+csv = "1.1.6"
+serde = { version = "1", features = ["derive"] }
+
+[features]
+default = []
+
+[profile.release]
+opt-level = 2
