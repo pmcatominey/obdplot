@@ -23,5 +23,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 
     let app = app::App::new(csv_log);
     let native_options = eframe::NativeOptions::default();
-    eframe::run_native(Box::new(app), native_options);
+    eframe::run_native("obdplotter", native_options, Box::new(|_cc| Box::new(app)));
+
+    Ok(())
 }

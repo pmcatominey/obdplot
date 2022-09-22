@@ -1,5 +1,5 @@
-use eframe::{egui, epi};
-use egui::plot::{Legend, Line, Plot, Value, Values};
+use eframe::egui;
+use egui::plot::{Legend, Line, Plot, PlotPoint, PlotPoints};
 
 use crate::obd;
 
@@ -18,20 +18,8 @@ impl App {
     }
 }
 
-impl epi::App for App {
-    fn name(&self) -> &str {
-        &self.csv.file_path
-    }
-
-    fn setup(
-        &mut self,
-        _ctx: &egui::Context,
-        _frame: &epi::Frame,
-        _storage: Option<&dyn epi::Storage>,
-    ) {
-    }
-
-    fn update(&mut self, ctx: &egui::Context, _frame: &epi::Frame) {
+impl eframe::App for App {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::TopBottomPanel::top("top_panel")
             .show(ctx, |ui| ui.checkbox(&mut self.show_legend, "Show Legend"));
 
@@ -54,16 +42,16 @@ impl epi::App for App {
                     .iter()
                     .map(|c| {
                         let mut i = 0_usize;
-                        let vals = c
+                        let vals: Vec<PlotPoint> = c
                             .values
                             .iter()
                             .map(|v| {
                                 let x = self.csv.x_col.values.get(i).unwrap_or(&0_f64);
                                 i += 1;
-                                Value::new(*x, *v)
+                                PlotPoint::new(*x, *v)
                             })
                             .collect();
-                        Line::new(Values::from_values(vals)).name(&c.header)
+                        Line::new(PlotPoints::Owned(vals)).name(&c.header)
                     })
                     .for_each(|l| {
                         plot_ui.line(l);
